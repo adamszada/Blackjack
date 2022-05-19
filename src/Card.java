@@ -15,12 +15,9 @@ public class Card {
 		return rank;
 	}
 
-
 	public int getValue(){
 		return getRank().rankValue;
 	}
-
-
 
 	public String toString(){
 		return ("["+ getRank() +" of "+ getSuit() + "] ("+this.getValue()+")");
