@@ -8,6 +8,10 @@ public class Deck {
 		this.cards = new ArrayList<Card>();
 	}
 
+	public ArrayList<Card> getCards() {
+		return cards;
+	}
+
 	public void createFullDeck(){
 		for(Suit cardSuit: Suit.values()){
 			for(Rank cardValue: Rank.values()){
@@ -39,5 +43,7 @@ public class Deck {
 		return cardListOutput;
 	}
 }
+
+
 
 
