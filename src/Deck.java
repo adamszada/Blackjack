@@ -1,14 +1,15 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Deck {
-	private ArrayList<Card> cards;
+	private List<Card> cards;
 
 	public Deck(){
 		this.cards = new ArrayList<Card>();
 	}
 
-	public ArrayList<Card> getCards() {
+	public List<Card> getCards() {
 		return cards;
 	}
 
@@ -29,7 +30,7 @@ public class Deck {
 	}
 
 	public void shuffle(){
-		ArrayList<Card> tmpDeck = new ArrayList<Card>();
+		List<Card> tmpDeck = new ArrayList<Card>();
 		Random random = new Random();
 		int CardIndex = 0;
 		int originalSize = this.cards.size();

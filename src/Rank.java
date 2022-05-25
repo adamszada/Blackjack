@@ -14,12 +14,16 @@ public enum Rank {
 	QUEEN("Queen",10),
 	KING("King",10);
 
-	String rankName;
-	int rankValue;
+	private String rankName;
+	private int rankValue;
 
 	Rank(String rankName, int rankValue){
 		this.rankName = rankName;
 		this.rankValue = rankValue;
+	}
+
+	public int getRankValue() {
+		return rankValue;
 	}
 
 	public String toString(){
