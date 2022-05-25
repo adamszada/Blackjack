@@ -12,6 +12,14 @@ public class Deck {
 		return cards;
 	}
 
+	public Card getCard(int index){
+		return cards.get(index);
+	}
+
+	public void removeCard(int index){
+		cards.remove(index);
+	}
+
 	public void createFullDeck(){
 		for(Suit cardSuit: Suit.values()){
 			for(Rank cardValue: Rank.values()){
