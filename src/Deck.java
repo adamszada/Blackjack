@@ -21,6 +21,10 @@ public class Deck {
 		cards.remove(index);
 	}
 
+	public int getSize(){
+		return cards.size();
+	}
+
 	public void createFullDeck(){
 		for(Suit cardSuit: Suit.values()){
 			for(Rank cardValue: Rank.values()){
@@ -55,9 +59,29 @@ public class Deck {
 	public void addCard(Card addend){
 		this.cards.add(addend);
 	}
+
 	public void draw(Deck origin){
 		this.cards.add(origin.getCard(0));
 		origin.removeCard(0);
+	}
+
+	public int getCardsValue(){
+		int value = 0;
+		int aces = 0;
+
+		for(Card Card: this.cards) {
+			value += Card.getValue();
+			if (Card.getValue() == 11)
+				aces++;
+		}
+
+		if (value > 21 && aces > 0){
+			while(aces > 0 && value > 21){
+				aces--;
+				value -= 10;
+			}
+		}
+		return value;
 	}
 }
 
