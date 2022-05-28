@@ -21,7 +21,7 @@ public class Deck {
 		cards.remove(index);
 	}
 
-	public int getSize(){
+	public int getSize() {
 		return cards.size();
 	}
 
@@ -65,20 +65,20 @@ public class Deck {
 		origin.removeCard(0);
 	}
 
-	public int getCardsValue(){
+	public int getCardsValue() {
 		int value = 0;
 		int aces = 0;
 
-		for(Card Card: this.cards) {
-			value += Card.getValue();
-			if (Card.getValue() == 11)
+		for	(Card card: this.cards) {
+			value += card.getValue();
+			if (card.getValue() == 11)
 				aces++;
-		}
 
-		if (value > 21 && aces > 0){
-			while(aces > 0 && value > 21){
-				aces--;
-				value -= 10;
+			if (value > 21 && aces > 0) {
+				while (aces > 0 && value > 21) {
+					aces--;
+					value -= 10;
+				}
 			}
 		}
 		return value;
