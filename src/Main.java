@@ -7,9 +7,9 @@ public class Main {
 
 		playingDeck.createFullDeck();
 
-//		System.out.println("PLAYING DECK IN ORDER");
-//		System.out.println(playingDeck);
-//		System.out.println("\nRANDOM PLAYING DECK");
+		System.out.println("PLAYING DECK IN ORDER");
+		System.out.println(playingDeck);
+		System.out.println("\nRANDOM PLAYING DECK");
 
 		playingDeck.shuffle();
 
@@ -28,26 +28,6 @@ public class Main {
 			dealer.getPersonalDeck().draw(playingDeck);
 			dealer.getPersonalDeck().draw(playingDeck);
 
-			while (true) {
-				System.out.print("Ur hand: ");
-				System.out.println(player.getPersonalDeck());
-				System.out.println("Ur deck is valued at: "+player.getPersonalDeck().getCardsValue());
-				System.out.println("Press (1) to hit or (2) to stand");
-
-				int choose = sc.nextInt();
-				switch (choose) {
-					case 1:
-						player.getPersonalDeck().draw(playingDeck);
-						System.out.println(player.getPersonalDeck().getCard(player.getPersonalDeck().getSize()-1));
-
-						if (player.getPersonalDeck().getCardsValue() > 21) {
-							System.out.print("U suck! "+player.getPersonalDeck().getCardsValue());
-							player.setPersonalMoney(player.getPersonalMoney() - bet);
-							System.exit(0);
-						}
-						break;
-				}
-			}
 		}
 
 

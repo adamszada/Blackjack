@@ -1,6 +1,6 @@
 public class Person {
 	private final Deck personalDeck;
-	private double personalMoney;
+	private final double personalMoney;
 
 	Person(){
 		this.personalDeck = new Deck();
@@ -14,8 +14,6 @@ public class Person {
 	public Deck getPersonalDeck() {
 		return personalDeck;
 	}
-
-	public void setPersonalMoney(double money) {
-		this.personalMoney = money;
-	}
 }
+
+
