@@ -19,5 +19,3 @@ public class Person {
 		this.personalMoney = money;
 	}
 }
-
-
