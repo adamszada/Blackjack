@@ -51,6 +51,14 @@ public class Deck {
 		}
 		return cardListOutput;
 	}
+
+	public void addCard(Card addend){
+		this.cards.add(addend);
+	}
+	public void draw(Deck origin){
+		this.cards.add(origin.getCard(0));
+		origin.removeCard(0);
+	}
 }
 
 

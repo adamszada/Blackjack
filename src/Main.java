@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Main {
 	public static void main(String[] args) {
 
@@ -12,5 +14,13 @@ public class Main {
 		playingDeck.shuffle();
 
 		System.out.println(playingDeck);
+
+
+		Person player = new Person();
+		Person dealer = new Person();
+
+		Scanner sc = new Scanner(System.in);
+
+
 	}
 }
