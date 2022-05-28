@@ -20,6 +20,15 @@ public class Main {
 		Person dealer = new Person();
 
 		Scanner sc = new Scanner(System.in);
+		while(player.getPersonalMoney()>0){
+			System.out.println("U've "+player.getPersonalMoney()+" how much would u like to bet?");
+			double bet = sc.nextDouble();
+			player.getPersonalDeck().draw(playingDeck);
+			player.getPersonalDeck().draw(playingDeck);
+			dealer.getPersonalDeck().draw(playingDeck);
+			dealer.getPersonalDeck().draw(playingDeck);
+
+		}
 
 
 	}
