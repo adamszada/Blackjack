@@ -82,11 +82,11 @@ public class Deck {
 	}
 
 	public void moveCardtoDeck(Deck tmp){
-		for(int i=0;i<cards.size();i++)
-			tmp.cards.add(this.getCard(i));
-		for(int i=0;i<cards.size();i++)
-			tmp.removeCard(0);
+		for(int i=0;i<tmp.cards.size();i++)
+			this.cards.add(tmp.getCard(i));
 	}
+
+
 	public void clearDeck(){
 		this.cards.clear();
 	}
