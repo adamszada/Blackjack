@@ -25,6 +25,17 @@ public class SinglePlayer {
 		playingDeck.shuffle();
 	}
 
+	public int whoWin(){
+		// 1 - player | 0 - draw | -1 - dealer;
+
+		if(dealer.getPersonalDeck().getCardsValue()>21 || dealer.getPersonalDeck().getCardsValue() < player.getPersonalDeck().getCardsValue())
+			return 1;
+		else if(dealer.getPersonalDeck().getCardsValue() == player.getPersonalDeck().getCardsValue())
+			return 0;
+		else
+			return -1;
+	}
+
 	public void runRound(){
 		Scanner sc = new Scanner(System.in);
 		while(player.getPersonalMoney()>0){
@@ -34,7 +45,26 @@ public class SinglePlayer {
 			player.getPersonalDeck().draw(playingDeck);
 			dealer.getPersonalDeck().draw(playingDeck);
 			dealer.getPersonalDeck().draw(playingDeck);
-			endFlag = false;
+			if(dealer.getPersonalDeck().getCardsValue()==21 || player.getPersonalDeck().getCardsValue()==21){
+				System.out.print("Ur hand: ");
+				System.out.println(player.getPersonalDeck());
+				System.out.println("Dealer's deck: "+dealer.getPersonalDeck());
+				System.out.println("BLACKJACK!");
+				if(player.getPersonalDeck().getCardsValue()==21){
+					System.out.println("Player wins!");
+					player.setPersonalMoney(player.getPersonalMoney()+bet*2);
+				}
+				else if(dealer.getPersonalDeck().getCardsValue()==21){
+					System.out.println("Dealer wins!");
+					player.setPersonalMoney(player.getPersonalMoney()-bet*2);
+				}
+				else
+					System.out.println("Push!");
+				prepareRound();
+				endFlag = true;
+			}
+			else
+				endFlag = false;
 			while (!endFlag){
 				System.out.print("Ur hand: ");
 				System.out.println(player.getPersonalDeck());
@@ -58,25 +88,26 @@ public class SinglePlayer {
 				while(dealer.getPersonalDeck().getCardsValue()<=16 && !endFlag){
 					dealer.getPersonalDeck().draw(playingDeck);
 					System.out.println("Dealer draws: " +dealer.getPersonalDeck().getCard(dealer.getPersonalDeck().getSize()-1));
-
+					if(dealer.getPersonalDeck().getCardsValue()>21){
+						System.out.println("Dealer busts!");
+						player.setPersonalMoney(player.getPersonalMoney()+bet);
+						endFlag = true;
+					}
 				}
-				if(dealer.getPersonalDeck().getCardsValue()>21 && !endFlag){
-					System.out.println("Dealer busts! "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
-					player.setPersonalMoney(player.getPersonalMoney()+bet);
-					endFlag = true;
-				}
-				if((dealer.getPersonalDeck().getCardsValue() < player.getPersonalDeck().getCardsValue()) && !endFlag){
-					System.out.println("U win! "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
-					player.setPersonalMoney(player.getPersonalMoney()+bet);
-					endFlag = true;
-				}
-				if(dealer.getPersonalDeck().getCardsValue() > player.getPersonalDeck().getCardsValue() && !endFlag){
-					System.out.println("Dealer wins! "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
-					player.setPersonalMoney(player.getPersonalMoney()-bet);
-					endFlag = true;
-				}
-				if(dealer.getPersonalDeck().getCardsValue() == player.getPersonalDeck().getCardsValue() && !endFlag){
-					System.out.println("Push "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
+				if(!endFlag){
+					switch (whoWin()){
+						case -1:
+							System.out.println("Dealer wins!");
+							player.setPersonalMoney(player.getPersonalMoney()-bet);
+							break;
+						case 1:
+							System.out.println("Player wins!");
+							player.setPersonalMoney(player.getPersonalMoney()+bet);
+							break;
+						default:
+							System.out.println("Push!");
+							break;
+					}
 					endFlag = true;
 				}
 				prepareRound();
