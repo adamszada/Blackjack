@@ -31,13 +31,14 @@ public class Main {
 			while (!endRound){
 				System.out.print("Ur hand: ");
 				System.out.println(player.getPersonalDeck());
+				System.out.println("Dealer's deck: "+dealer.getPersonalDeck().getCard(0)+" [Hidden]");
 				System.out.println("Ur deck is valued at: "+player.getPersonalDeck().getCardsValue());
 				System.out.println("Press (1) to hit or (2) to stand");
 				int choose = sc.nextInt();
 				switch(choose){
 					case 1:
 						player.getPersonalDeck().draw(playingDeck);
-						System.out.println(player.getPersonalDeck().getCard(player.getPersonalDeck().getSize()-1));
+						System.out.println("U draw: "+player.getPersonalDeck().getCard(player.getPersonalDeck().getSize()-1));
 						if(player.getPersonalDeck().getCardsValue()>21){
 							System.out.print("U suck! "+player.getPersonalDeck().getCardsValue());
 							player.setPersonalMoney(player.getPersonalMoney()-bet);
@@ -52,12 +53,29 @@ public class Main {
 					player.setPersonalMoney(player.getPersonalMoney()-bet);
 					endRound = true;
 				}
+				while(dealer.getPersonalDeck().getCardsValue()<=16 && !endRound){
+					dealer.getPersonalDeck().draw(playingDeck);
+					System.out.println("Dealer draws: " +dealer.getPersonalDeck().getCard(dealer.getPersonalDeck().getSize()-1));
+
+				}
+				if(dealer.getPersonalDeck().getCardsValue()>21 && !endRound){
+					System.out.println("U win! "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
+					player.setPersonalMoney(player.getPersonalMoney()+bet);
+					endRound = true;
+				}
 				if(dealer.getPersonalDeck().getCardsValue() < player.getPersonalDeck().getCardsValue() && !endRound){
 					System.out.println("U win! "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
 					player.setPersonalMoney(player.getPersonalMoney()+bet);
 					endRound = true;
 				}
-
+				if(dealer.getPersonalDeck().getCardsValue() == player.getPersonalDeck().getCardsValue() && !endRound){
+					System.out.println("Push "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
+					player.setPersonalMoney(player.getPersonalMoney()+bet);
+					endRound = true;
+				}
+				player.clearDeck();
+				dealer.clearDeck();
+				System.out.println("END OF ROUND!");
 			}
 		}
 

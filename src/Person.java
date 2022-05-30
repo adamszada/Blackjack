@@ -18,4 +18,8 @@ public class Person {
 	public void setPersonalMoney(double money){
 		this.personalMoney = money;
 	}
+
+	public void clearDeck(){
+		this.personalDeck.clearDeck();
+	}
 }

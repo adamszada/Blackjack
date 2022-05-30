@@ -80,6 +80,16 @@ public class Deck {
 		}
 		return value;
 	}
+
+	public void moveCardtoDeck(Deck tmp){
+		for(int i=0;i<cards.size();i++)
+			tmp.cards.add(this.getCard(i));
+		for(int i=0;i<cards.size();i++)
+			tmp.removeCard(0);
+	}
+	public void clearDeck(){
+		this.cards.clear();
+	}
 }
 
 
