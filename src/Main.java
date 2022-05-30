@@ -40,7 +40,7 @@ public class Main {
 						player.getPersonalDeck().draw(playingDeck);
 						System.out.println("U draw: "+player.getPersonalDeck().getCard(player.getPersonalDeck().getSize()-1));
 						if(player.getPersonalDeck().getCardsValue()>21){
-							System.out.print("U suck! "+player.getPersonalDeck().getCardsValue());
+							System.out.println("U suck! "+player.getPersonalDeck().getCardsValue());
 							player.setPersonalMoney(player.getPersonalMoney()-bet);
 							endRound = true;
 						}
@@ -58,19 +58,13 @@ public class Main {
 					System.out.println("Dealer draws: " +dealer.getPersonalDeck().getCard(dealer.getPersonalDeck().getSize()-1));
 
 				}
-				if(dealer.getPersonalDeck().getCardsValue()>21 && !endRound){
-					System.out.println("U win! "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
-					player.setPersonalMoney(player.getPersonalMoney()+bet);
-					endRound = true;
-				}
-				if(dealer.getPersonalDeck().getCardsValue() < player.getPersonalDeck().getCardsValue() && !endRound){
+				if((dealer.getPersonalDeck().getCardsValue()>21 || dealer.getPersonalDeck().getCardsValue() < player.getPersonalDeck().getCardsValue()) && !endRound){
 					System.out.println("U win! "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
 					player.setPersonalMoney(player.getPersonalMoney()+bet);
 					endRound = true;
 				}
 				if(dealer.getPersonalDeck().getCardsValue() == player.getPersonalDeck().getCardsValue() && !endRound){
 					System.out.println("Push "+player.getPersonalDeck().getCardsValue()+' '+dealer.getPersonalDeck().getCardsValue());
-					player.setPersonalMoney(player.getPersonalMoney()+bet);
 					endRound = true;
 				}
 				player.clearDeck();
