@@ -55,6 +55,16 @@ public class Deck {
 		return cardListOutput;
 	}
 
+	public String toStringMultiplayer(){
+		String cardListOutput = "";
+		int i = 0;
+		for(Card tmpCard: this.cards){
+			cardListOutput += " " + tmpCard.toString();
+			i++;
+		}
+		return cardListOutput;
+	}
+
 	public void addCard(Card addend){
 		this.cards.add(addend);
 	}
