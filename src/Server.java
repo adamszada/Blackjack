@@ -50,6 +50,6 @@ public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(666);
         Server server = new Server(serverSocket);
-        server.startServer(2);
+        server.startServer(Integer.parseInt(args[0]));
     }
 }

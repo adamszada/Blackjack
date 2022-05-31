@@ -25,7 +25,7 @@ public class Main {
 			case 1 -> new SinglePlayer();
 			case 2 -> {
 				do{
-					System.out.println("Enter the amount of players (max 4):");
+					System.out.println("Enter the amount of players:");
 					while (!sc.hasNextInt()) {
 						System.out.println("That's not a proper number!\nTry again");
 						sc.next();
