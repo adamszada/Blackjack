@@ -38,15 +38,23 @@ public class SinglePlayer {
 
 	public void runRound(){
 		Scanner sc = new Scanner(System.in);
+		int choice;
+		double bet;
 		while(player.getPersonalMoney()>0){
-			System.out.println("U've "+player.getPersonalMoney()+"PLN how much would u like to bet?");
-			double bet = sc.nextDouble();
+			do{
+				System.out.println("U've "+player.getPersonalMoney()+"PLN how much would u like to bet?");
+				while (!sc.hasNextDouble()) {
+					System.out.println("That's not a number!\nTry again");
+					sc.next();
+				}
+				bet = sc.nextDouble();
+			}while (bet<=0 || bet>player.getPersonalMoney());
 			player.getPersonalDeck().draw(playingDeck);
 			player.getPersonalDeck().draw(playingDeck);
 			dealer.getPersonalDeck().draw(playingDeck);
 			dealer.getPersonalDeck().draw(playingDeck);
 			if(dealer.getPersonalDeck().getCardsValue()==21 || player.getPersonalDeck().getCardsValue()==21){
-				System.out.print("Ur hand: ");
+				System.out.print("Your deck: ");
 				System.out.println(player.getPersonalDeck());
 				System.out.println("Dealer's deck: "+dealer.getPersonalDeck());
 				System.out.println("BLACKJACK!");
@@ -68,19 +76,26 @@ public class SinglePlayer {
 			while (!endFlag){
 				System.out.print("Ur hand: ");
 				System.out.println(player.getPersonalDeck());
-				System.out.println("Dealer's deck: "+dealer.getPersonalDeck());
+				System.out.println("Dealer's deck: "+dealer.getPersonalDeck().getCard(0)+ " [Hidden]");
 				System.out.println("Ur deck is valued at: "+player.getPersonalDeck().getCardsValue());
-				System.out.println("Press (1) to hit or (2) to stand");
-				int choose = sc.nextInt();
-				switch(choose){
+				do{
+					System.out.println("Press (1) to hit or (2) to stand");
+					while (!sc.hasNextInt()) {
+						System.out.println("That's not a number!\nTry again");
+						sc.next();
+					}
+					choice = sc.nextInt();
+				}while(choice!=1 && choice!=2);
+				switch(choice){
 					case 1:
 						player.getPersonalDeck().draw(playingDeck);
 						System.out.println("U draw: "+player.getPersonalDeck().getCard(player.getPersonalDeck().getSize()-1));
 						if(player.getPersonalDeck().getCardsValue()>21){
-							System.out.println("U suck! "+player.getPersonalDeck().getCardsValue());
+							System.out.println("U suck! ");
 							player.setPersonalMoney(player.getPersonalMoney()-bet);
 							endFlag = true;
 						}
+						System.out.println("Ur deck is valued at: "+player.getPersonalDeck().getCardsValue());
 						break;
 					case 2:
 						break;
@@ -90,23 +105,24 @@ public class SinglePlayer {
 					System.out.println("Dealer draws: " +dealer.getPersonalDeck().getCard(dealer.getPersonalDeck().getSize()-1));
 					if(dealer.getPersonalDeck().getCardsValue()>21){
 						System.out.println("Dealer busts!");
+						System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\nValue: "+dealer.getPersonalDeck().getCardsValue());
 						player.setPersonalMoney(player.getPersonalMoney()+bet);
 						endFlag = true;
 					}
 				}
 				if(!endFlag){
-					switch (whoWin()){
-						case -1:
+					switch (whoWin()) {
+						case -1 -> {
 							System.out.println("Dealer wins!");
-							player.setPersonalMoney(player.getPersonalMoney()-bet);
-							break;
-						case 1:
+							System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\nValue: "+dealer.getPersonalDeck().getCardsValue());
+							player.setPersonalMoney(player.getPersonalMoney() - bet);
+						}
+						case 1 -> {
 							System.out.println("Player wins!");
-							player.setPersonalMoney(player.getPersonalMoney()+bet);
-							break;
-						default:
-							System.out.println("Push!");
-							break;
+							System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\nValue: "+dealer.getPersonalDeck().getCardsValue());
+							player.setPersonalMoney(player.getPersonalMoney() + bet);
+						}
+						default -> System.out.println("Push!");
 					}
 					endFlag = true;
 				}
