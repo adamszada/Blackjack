@@ -61,13 +61,17 @@ public class SinglePlayer {
 				if(player.getPersonalDeck().getCardsValue()==21){
 					System.out.println("Player wins!");
 					player.setPersonalMoney(player.getPersonalMoney()+bet*2);
+					player.addWon();
 				}
 				else if(dealer.getPersonalDeck().getCardsValue()==21){
 					System.out.println("Dealer wins!");
 					player.setPersonalMoney(player.getPersonalMoney()-bet*2);
+					player.addLoses();
 				}
-				else
+				else {
 					System.out.println("Push!");
+					player.addTied();
+				}
 				prepareRound();
 				endFlag = true;
 			}
@@ -88,14 +92,20 @@ public class SinglePlayer {
 				}while(choice!=1 && choice!=2);
 				switch(choice){
 					case 1:
-						player.getPersonalDeck().draw(playingDeck);
-						System.out.println("U draw: "+player.getPersonalDeck().getCard(player.getPersonalDeck().getSize()-1));
-						if(player.getPersonalDeck().getCardsValue()>21){
-							System.out.println("U suck! ");
-							player.setPersonalMoney(player.getPersonalMoney()-bet);
-							endFlag = true;
-						}
-						System.out.println("Ur deck is valued at: "+player.getPersonalDeck().getCardsValue());
+						do {
+							player.getPersonalDeck().draw(playingDeck);
+							System.out.println("U draw: " + player.getPersonalDeck().getCard(player.getPersonalDeck().getSize() - 1));
+							if (player.getPersonalDeck().getCardsValue() > 21) {
+								System.out.println("U bust! ");
+								player.setPersonalMoney(player.getPersonalMoney() - bet);
+								player.addLoses();
+								endFlag = true;
+								break;
+							}
+							System.out.println("Ur deck is valued at: " + player.getPersonalDeck().getCardsValue());
+							System.out.println("Press (1) to hit or (2) to stand");
+							choice = sc.nextInt();
+						}while(choice!=2);
 						break;
 					case 2:
 						break;
@@ -107,6 +117,7 @@ public class SinglePlayer {
 						System.out.println("Dealer busts!");
 						System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\nValue: "+dealer.getPersonalDeck().getCardsValue());
 						player.setPersonalMoney(player.getPersonalMoney()+bet);
+						player.addWon();
 						endFlag = true;
 					}
 				}
@@ -116,13 +127,19 @@ public class SinglePlayer {
 							System.out.println("Dealer wins!");
 							System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\nValue: "+dealer.getPersonalDeck().getCardsValue());
 							player.setPersonalMoney(player.getPersonalMoney() - bet);
+							player.addLoses();
 						}
 						case 1 -> {
 							System.out.println("Player wins!");
 							System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\nValue: "+dealer.getPersonalDeck().getCardsValue());
 							player.setPersonalMoney(player.getPersonalMoney() + bet);
+							player.addWon();
 						}
-						default -> System.out.println("Push!");
+						default -> {
+							System.out.println("Push!");
+							player.addTied();
+
+						}
 					}
 					endFlag = true;
 				}
@@ -130,5 +147,6 @@ public class SinglePlayer {
 				System.out.println("END OF ROUND!");
 			}
 		}
+		System.out.println("Rounds: \nwon: "+player.getWon()+" lost: "+player.getLoses()+" tied: "+player.getTied());
 	}
 }

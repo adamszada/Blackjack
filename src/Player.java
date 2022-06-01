@@ -19,17 +19,19 @@ public class Player implements Runnable{
     public void sendNotification(){
         Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
-            if(!myTurn) {
-                String move;
-                move = scanner.nextLine();
-                try {
-                    writer.write(move);
-                    writer.newLine();
-                    writer.flush();
-                } catch (IOException e) {
-                    closeEverything(socket, reader, writer);
+            while(socket.isConnected()) {
+                if (!myTurn) {
+                    String move;
+                    move = scanner.nextLine();
+                    try {
+                        writer.write(move);
+                        writer.newLine();
+                        writer.flush();
+                    } catch (IOException e) {
+                        closeEverything(socket, reader, writer);
+                    }
+                    myTurn = false;
                 }
-                myTurn = false;
             }
         }).start();
     }
@@ -45,6 +47,7 @@ public class Player implements Runnable{
                         splited = notificationFromServer.split("#");
                         for(String s : splited)
                             System.out.println(s);
+                        //System.out.println(notificationFromServer);
                         myTurn = true;
                     }
                 } catch (IOException e) {

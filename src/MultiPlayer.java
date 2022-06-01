@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 public class MultiPlayer implements Runnable {
 
-	private ArrayList<Socket> sockets;
-	private ArrayList<BufferedReader> readers;
-	private ArrayList<BufferedWriter> writers;
-	private ArrayList<String> usernames;
+	private final ArrayList<Socket> sockets;
+	private final ArrayList<BufferedReader> readers;
+	private final ArrayList<BufferedWriter> writers;
+	private final ArrayList<String> usernames;
 	private ArrayList<Boolean> isPlaying;
-	private ArrayList<Person> players;
+	private final ArrayList<Person> players;
 	private ArrayList<Integer> bets;
 	private String playersCards;
 	private int noPlayers;
 	private final Deck playingDeck;
-	private ArrayList<Boolean> isReady;
+	private final ArrayList<Boolean> isReady;
 
 
 
@@ -48,7 +48,6 @@ public class MultiPlayer implements Runnable {
 
 	@Override
 	public void run() {
-		int tmp;
 		for(int i=0;i<noPlayers;i++){
 			if(sockets.get(i).isConnected()){
 				try {
@@ -70,6 +69,7 @@ public class MultiPlayer implements Runnable {
 			}
 		}
 		int turn = 0;
+		int tmp = 0;
 		while(true){
 			playingDeck.createFullDeck();
 			playingDeck.shuffle();
@@ -109,7 +109,40 @@ public class MultiPlayer implements Runnable {
 				}
 				turn+=1;
 			}
+			if(turn==3){
+				for (int i = 0; i < noPlayers; i++) {
+					try {
+						tmp = Integer.parseInt(readers.get(i).readLine());
+						if(tmp==2)
+							isReady.add(i,true);
+					}catch (IOException e){
+						System.out.println("Something went wrong!");
+						System.exit(2);
+					}
+				}
+				turn+=1;
+			}
+			if(turn==4){
+				for (int i = 0; i < noPlayers; i++) {
+					try {
+						if(!isReady.get(i)) {
+							do {
+								players.get(i).getPersonalDeck().draw(playingDeck);
+								writers.get(i).write(usernames.get(i) + ' ' + "Your deck:" + players.get(i).getPersonalDeck().toStringMultiplayer() + " #Valued at: " + players.get(i).getPersonalDeck().getCardsValue() + " #Press (1) to hit or (2) to stand");
+								writers.get(i).newLine();
+								writers.get(i).flush();
+								tmp = Integer.parseInt(readers.get(i).readLine());
+							}while(tmp!=2);
+							isReady.add(i,true);
+						}
 
+					}catch (IOException e){
+						System.out.println("Something went wrong!");
+						System.exit(2);
+					}
+				}
+				turn+=1;
+			}
 		}
 	}
 }
