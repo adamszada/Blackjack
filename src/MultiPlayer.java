@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class MultiPlayer implements Runnable {
 
@@ -45,6 +47,16 @@ public class MultiPlayer implements Runnable {
 		}
 	}
 
+
+	public int whoWin(){
+		ArrayList<Integer> tmpValues = new ArrayList<Integer>();
+		for(int i=0;i<noPlayers;i++){
+			tmpValues.add(players.get(i).getPersonalDeck().getCardsValue());
+			if(tmpValues.get(i)>21)
+				tmpValues.set(i,-1);
+		}
+		return  tmpValues.indexOf(Collections.max(tmpValues));
+	}
 
 	@Override
 	public void run() {
@@ -114,7 +126,7 @@ public class MultiPlayer implements Runnable {
 					try {
 						tmp = Integer.parseInt(readers.get(i).readLine());
 						if(tmp==2)
-							isReady.add(i,true);
+							isReady.set(i,true);
 					}catch (IOException e){
 						System.out.println("Something went wrong!");
 						System.exit(2);
@@ -133,7 +145,7 @@ public class MultiPlayer implements Runnable {
 								writers.get(i).flush();
 								tmp = Integer.parseInt(readers.get(i).readLine());
 							}while(tmp!=2);
-							isReady.add(i,true);
+							isReady.set(i,true);
 						}
 
 					}catch (IOException e){
@@ -143,6 +155,35 @@ public class MultiPlayer implements Runnable {
 				}
 				turn+=1;
 			}
+			if(turn==5) {
+				tmp = whoWin();
+				try{
+					for(int i=0;i<noPlayers;i++){
+						if(i!=tmp) {
+							writers.get(i).write(usernames.get(i) + ' ' + "You lost the round! #Press any key to continue");
+							players.get(i).setPersonalMoney(players.get(i).getPersonalMoney()-bets.get(i));
+						}
+						else {
+							writers.get(i).write(usernames.get(i) + ' ' + "You won the round! #Press any key to continue");
+							players.get(i).setPersonalMoney(players.get(i).getPersonalMoney() + bets.get(i));
+						}
+						writers.get(i).newLine();
+						writers.get(i).flush();
+						readers.get(i).readLine();
+					}
+				}catch (IOException e){
+					System.out.println("Something went wrong!");
+					System.exit(2);
+				}
+			}
+			turn = 0;
+			playingDeck.clearDeck();
+			for(int i=0;i<noPlayers;i++){
+				players.get(i).getPersonalDeck().clearDeck();
+				bets.set(i,0);
+				isReady.set(i,false);
+			}
+			playersCards = "#Remainder have:#";
 		}
 	}
 }

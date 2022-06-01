@@ -31,7 +31,7 @@ public class Main {
 						sc.next();
 					}
 					tmp[0] = String.valueOf(sc.nextInt());
-				}while (Integer.parseInt(tmp[0])<=0 || Integer.parseInt(tmp[0])>4);
+				}while (Integer.parseInt(tmp[0])<=1 || Integer.parseInt(tmp[0])>8);
 				Server.main(tmp);
 			}
 		}
