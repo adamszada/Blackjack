@@ -3,6 +3,10 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck {
+	public static final int ACE_VALUE = 11;
+	public static final int BLACKJACK_VALUE = 21;
+	public static final int START_VALUE = 0;
+	public static final int KING_VALUE = 10;
 	private List<Card> cards;
 
 	public Deck(){
@@ -21,6 +25,10 @@ public class Deck {
 		cards.remove(index);
 	}
 
+	public void clearDeck(){
+		this.cards.clear();
+	}
+
 	public int getSize(){
 		return cards.size();
 	}
@@ -35,7 +43,7 @@ public class Deck {
 	public void shuffle(){
 		List<Card> tmpDeck = new ArrayList<Card>();
 		Random random = new Random();
-		int CardIndex = 0;
+		int CardIndex = START_VALUE;
 		int originalSize = this.cards.size();
 		for(int i=0;i<originalSize;i++){
 			CardIndex = random.nextInt((this.cards.size()-1)+1);
@@ -47,7 +55,7 @@ public class Deck {
 
 	public String toString() {
 		String cardListOutput = "";
-		int i = 0;
+		int i = START_VALUE;
 		for(Card tmpCard: this.cards){
 			cardListOutput += "\n" + i + " " + tmpCard.toString();
 			i++;
@@ -57,7 +65,7 @@ public class Deck {
 
 	public String toStringMultiplayer(){
 		String cardListOutput = "";
-		int i = 0;
+		int i = START_VALUE;
 		for(Card tmpCard: this.cards){
 			cardListOutput += " " + tmpCard.toString();
 			i++;
@@ -65,27 +73,24 @@ public class Deck {
 		return cardListOutput;
 	}
 
-	public void addCard(Card addend){
-		this.cards.add(addend);
-	}
 	public void draw(Deck origin){
-		this.cards.add(origin.getCard(0));
-		origin.removeCard(0);
+		this.cards.add(origin.getCard(START_VALUE));
+		origin.removeCard(START_VALUE);
 	}
 
 	public int getCardsValue(){
-		int value = 0;
-		int aces = 0;
+		int value = START_VALUE;
+		int aces = START_VALUE;
 		for(Card Card: this.cards){
 			value += Card.getValue();
-			if (Card.getValue() == 11){
+			if (Card.getValue() == ACE_VALUE){
 				aces++;
 			}
 		}
-		if (value > 21 && aces > 0){
-			while(aces > 0 && value > 21){
+		if (value > BLACKJACK_VALUE && aces > START_VALUE){
+			while(aces > START_VALUE && value > BLACKJACK_VALUE){
 				aces--;
-				value -= 10;
+				value -= KING_VALUE;
 			}
 		}
 		return value;
@@ -96,10 +101,6 @@ public class Deck {
 			this.cards.add(tmp.getCard(i));
 	}
 
-
-	public void clearDeck(){
-		this.cards.clear();
-	}
 }
 
 

@@ -28,10 +28,9 @@ public class Server {
                 MultiPlayer game = new MultiPlayer(tmpSockets,slots);
                 Thread gameThread = new Thread(game);
                 gameThread.start();
-
             }
         } catch(IOException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             closeServerSocket();
         }
     }
@@ -39,9 +38,8 @@ public class Server {
 
     public void closeServerSocket() {
         try {
-            if(serverSocket != null) {
+            if(serverSocket != null)
                 serverSocket.close();
-            }
         } catch(IOException e) {
             e.printStackTrace();
         }
