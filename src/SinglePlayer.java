@@ -17,8 +17,8 @@ public class SinglePlayer implements OutputHandler, InputHandler {
 	}
 
 	public void prepareRound(){
-		playingDeck.moveCardtoDeck(player.getPersonalDeck());
-		playingDeck.moveCardtoDeck(dealer.getPersonalDeck());
+		playingDeck.moveCardToDeck(player.getPersonalDeck());
+		playingDeck.moveCardToDeck(dealer.getPersonalDeck());
 		player.getPersonalDeck().clearDeck();
 		dealer.getPersonalDeck().clearDeck();
 		playingDeck.shuffle();

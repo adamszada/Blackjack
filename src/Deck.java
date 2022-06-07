@@ -10,7 +10,7 @@ public class Deck {
 	private List<Card> cards;
 
 	public Deck(){
-		this.cards = new ArrayList<Card>();
+		this.cards = new ArrayList<>();
 	}
 
 	public List<Card> getCards() {
@@ -41,9 +41,9 @@ public class Deck {
 	}
 
 	public void shuffle(){
-		List<Card> tmpDeck = new ArrayList<Card>();
+		List<Card> tmpDeck = new ArrayList<>();
 		Random random = new Random();
-		int CardIndex = START_VALUE;
+		int CardIndex;
 		int originalSize = this.cards.size();
 		for(int i=0;i<originalSize;i++){
 			CardIndex = random.nextInt((this.cards.size()-1)+1);
@@ -54,23 +54,20 @@ public class Deck {
 	}
 
 	public String toString() {
-		String cardListOutput = "";
+		StringBuilder cardListOutput = new StringBuilder();
 		int i = START_VALUE;
 		for(Card tmpCard: this.cards){
-			cardListOutput += "\n" + i + " " + tmpCard.toString();
+			cardListOutput.append("\n").append(i).append(" ").append(tmpCard.toString());
 			i++;
 		}
-		return cardListOutput;
+		return cardListOutput.toString();
 	}
 
 	public String toStringMultiplayer(){
-		String cardListOutput = "";
-		int i = START_VALUE;
-		for(Card tmpCard: this.cards){
-			cardListOutput += " " + tmpCard.toString();
-			i++;
-		}
-		return cardListOutput;
+		StringBuilder cardListOutput = new StringBuilder();
+		for(Card tmpCard: this.cards)
+			cardListOutput.append(" ").append(tmpCard.toString());
+		return cardListOutput.toString();
 	}
 
 	public void draw(Deck origin){
@@ -96,7 +93,7 @@ public class Deck {
 		return value;
 	}
 
-	public void moveCardtoDeck(Deck tmp){
+	public void moveCardToDeck(Deck tmp){
 		for(int i=0;i<tmp.cards.size();i++)
 			this.cards.add(tmp.getCard(i));
 	}
