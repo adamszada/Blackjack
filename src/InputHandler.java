@@ -4,10 +4,10 @@ public interface InputHandler {
 	Scanner sc = new Scanner(System.in);
 
 	static double getBet(double limit){
-		double bet = 0;
+		double bet;
 		do{
 			while (!sc.hasNextDouble()) {
-				System.out.println(OutputHandler.getMessage(OutputHandler.Type.BET));
+				System.out.println("That's not a number!\nTry again");
 				sc.next();
 			}
 			bet = sc.nextDouble();
@@ -16,10 +16,10 @@ public interface InputHandler {
 	}
 
 	static int getChoice(int min, int max){
-		int choice = 0;
+		int choice;
 		do{
 			while (!sc.hasNextInt()) {
-				System.out.println(OutputHandler.Type.NUMBER_ERROR);
+				System.out.println("That's not a number!\nTry again");
 				sc.next();
 			}
 			choice = sc.nextInt();

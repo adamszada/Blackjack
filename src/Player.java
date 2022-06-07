@@ -12,9 +12,7 @@ public class Player implements Runnable{
     private BufferedReader reader;
     private BufferedWriter writer;
     private String username;
-    private int id;
     private boolean myTurn = false;
-    private Person profile;
 
     public void sendNotification(){
         Scanner scanner = new Scanner(System.in);
@@ -38,8 +36,8 @@ public class Player implements Runnable{
 
     public void listenNotification(){
         new Thread(() -> {
-            String notificationFromServer=null;
-            String[] splited = new String[100];
+            String notificationFromServer;
+            String[] splited;
             while(socket.isConnected()) {
                 try {
                     notificationFromServer = reader.readLine();
@@ -60,17 +58,14 @@ public class Player implements Runnable{
     }
 
 
-    public void closeEverything(Socket socket2, BufferedReader reader2, BufferedWriter writer2) {
+    public void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer) {
         try {
-            if(reader != null) {
+            if(reader != null)
                 reader.close();
-            }
-            if(writer != null) {
+            if(writer != null)
                 writer.close();
-            }
-            if(socket != null) {
+            if(socket != null)
                 socket.close();
-            }
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -83,20 +78,16 @@ public class Player implements Runnable{
             socket = new Socket("localhost", 666);
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             reader  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            profile = new Person();
-
         }catch (IOException e){
             System.out.println("Server didnt respond!");
             closeEverything(socket,reader,writer);
             System.exit(1);
         }
-        String tmp = null;
         try {
-            tmp = reader.readLine();
+            reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        id = Integer.parseInt(tmp);
         System.out.println("Enter your username:");
         Scanner sc = new Scanner(System.in);
         username = sc.nextLine();

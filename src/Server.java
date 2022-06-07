@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 public class Server {
 
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
     public void startServer(int slots) {
-        System.out.printf("Initialized server at port " +
+        System.out.println("Initialized server at port " +
                 serverSocket.getLocalPort() +
-                "\nwaiting for connections...\n");
+                "waiting for connections...");
         try {
-            ArrayList<Socket> tmpSockets = new ArrayList<Socket>();
+            ArrayList<Socket> tmpSockets = new ArrayList<>();
             while(!serverSocket.isClosed()) {
                 for(int i=0;i<slots;i++) {
                     Socket socket = serverSocket.accept();
