@@ -12,7 +12,7 @@ public class MultiPlayer implements Runnable {
 	private final List<BufferedWriter> writers;
 	private final List<String> usernames;
 	private final List<Person> players;
-	private final List<Integer> bets;
+	private final List<Double> bets;
 	private String playersCards;
 	private final int noPlayers;
 	private final Deck playingDeck;
@@ -40,47 +40,71 @@ public class MultiPlayer implements Runnable {
 		}
 	}
 
-
 	public int whoWin(){
 		ArrayList<Integer> tmpValues = new ArrayList<>();
 		for(int i=0;i<noPlayers;i++){
-			tmpValues.add(players.get(i).getPersonalDeck().getCardsValue());
-			if(tmpValues.get(i)>BLACKJACK_VALUE)
-				tmpValues.set(i,-1);
+			if(sockets.get(i).isConnected()) {
+				tmpValues.add(players.get(i).getPersonalDeck().getCardsValue());
+				if (tmpValues.get(i) > BLACKJACK_VALUE)
+					tmpValues.set(i, -1);
+			}
 		}
 		return tmpValues.indexOf(Collections.max(tmpValues));
 	}
 
+	public boolean validateBet(String input,double max){
+		if(input.matches("[0-9]+"))
+			return Double.parseDouble(input) <= max && Double.parseDouble(input)>0;
+		return false;
+	}
+
 	public void handleBets(){
+		String tmp;
 		for (int i = 0; i < noPlayers; i++){
-			try {
-				sendMessageLocal(i,usernames.get(i)+' '+OutputHandler.getMessage(OutputHandler.Type.BET)+players.get(i).getPersonalMoney());
-				bets.add(i,Integer.parseInt(readers.get(i).readLine()));
-			}catch (IOException e){
-				System.out.println("Something went wrong!");
-				System.exit(2);
+			if(sockets.get(i).isConnected()) {
+				try {
+					do {
+						sendMessageLocal(i, usernames.get(i) + ' ' + OutputHandler.getMessage(OutputHandler.Type.BET) + players.get(i).getPersonalMoney());
+						tmp = readers.get(i).readLine();
+					} while (!validateBet(tmp, players.get(i).getPersonalMoney()));
+					bets.add(i, Double.parseDouble(tmp));
+				} catch (IOException e) {
+					System.out.println("Something went wrong!");
+					System.exit(2);
+				}
 			}
 		}
 	}
 
+	public boolean validateMove(String input){
+		if(input.matches("[1-2]+"))
+			return Integer.parseInt(input) <= 2 && Integer.parseInt(input)>=1;
+		return false;
+	}
 
 	public void handleMove(){
 		int tmp;
+		String tmpInput;
 		for (int i = 0; i < noPlayers; i++){
-			try {
-				if(players.get(i).getPersonalDeck().getCardsValue() >= BLACKJACK_VALUE)
-					break;
-				sendMessageLocal(i,OutputHandler.getMessage(OutputHandler.Type.MOVE_CHOICE));
-				do {
-					tmp = Integer.parseInt(readers.get(i).readLine());
-					if(tmp==1){
-						drawCard(players.get(i), 1);
-						sendMessageLocal(i,OutputHandler.getMessage(OutputHandler.Type.DRAW_CARD) + players.get(i).getPersonalDeck().getCard(players.get(i).getPersonalDeck().getSize()-1) +'#'+OutputHandler.getMessage(OutputHandler.Type.DECK_VALUE) + players.get(i).getPersonalDeck().getCardsValue());
-					}
-				}while(tmp!=2);
-			}catch (IOException e){
-				System.out.println("Something went wrong!");
-				System.exit(2);
+			if(sockets.get(i).isConnected()) {
+				try {
+					if (players.get(i).getPersonalDeck().getCardsValue() >= BLACKJACK_VALUE)
+						break;
+					sendMessageLocal(i, OutputHandler.getMessage(OutputHandler.Type.MOVE_CHOICE));
+					do {
+						do {
+							tmpInput = readers.get(i).readLine();
+						} while (!validateMove(tmpInput));
+						tmp = Integer.parseInt(tmpInput);
+						if (tmp == 1) {
+							drawCard(players.get(i), 1);
+							sendMessageLocal(i, OutputHandler.getMessage(OutputHandler.Type.DRAW_CARD) + players.get(i).getPersonalDeck().getCard(players.get(i).getPersonalDeck().getSize() - 1) + '#' + OutputHandler.getMessage(OutputHandler.Type.DECK_VALUE) + players.get(i).getPersonalDeck().getCardsValue());
+						}
+					} while (tmp != 2);
+				} catch (IOException e) {
+					System.out.println("Something went wrong!");
+					System.exit(2);
+				}
 			}
 		}
 	}
@@ -119,40 +143,54 @@ public class MultiPlayer implements Runnable {
 			}
 		}
 		while(true) {
+			for(int i=0;i<noPlayers;i++){
+				if(players.get(i).getPersonalMoney()==0){
+					for (int j=0;j<noPlayers;j++)
+						sendMessageLocal(j,"End of the game!");
+					System.exit(1);
+				}
+			}
 			playingDeck.createFullDeck();
 			playingDeck.shuffle();
 			handleBets();
-			for (int i = 0; i < noPlayers; i++)
-				drawCard(players.get(i), 2);
+			for (int i = 0; i < noPlayers; i++) {
+				if(sockets.get(i).isConnected())
+					drawCard(players.get(i), 2);
+			}
 			for(int i=0;i<noPlayers;i++){
-				for(int j=0;j<noPlayers;j++)
-					if(j!=i)
-						playersCards+=String.valueOf(players.get(j).getPersonalDeck().getCard(0))+' '+"[Hidden] #";
-				sendMessageLocal(i, "Your deck:"+players.get(i).getPersonalDeck().toStringMultiplayer()+" #Valued at: "+players.get(i).getPersonalDeck().getCardsValue()+playersCards);
-				playersCards = "#Remainder have:#";
+				if(sockets.get(i).isConnected()) {
+					for (int j = 0; j < noPlayers; j++)
+						if (j != i)
+							playersCards += String.valueOf(players.get(j).getPersonalDeck().getCard(0)) + ' ' + "[Hidden] #";
+					sendMessageLocal(i, "Your deck:" + players.get(i).getPersonalDeck().toStringMultiplayer() + " #Valued at: " + players.get(i).getPersonalDeck().getCardsValue() + playersCards);
+					playersCards = "#Remainder have:#";
+				}
 			}
 			handleMove();
 			tmp = whoWin();
 			try{
-				for(int i=0;i<noPlayers;i++){
-					if(i!=tmp) {
-						sendMessageLocal(i,"You lost the round! #Press any key to continue");
-						players.get(i).setPersonalMoney(players.get(i).getPersonalMoney()-bets.get(i));
+				for (int i = 0; i < noPlayers; i++){
+					if(sockets.get(i).isConnected()) {
+						if (i != tmp) {
+							sendMessageLocal(i, "You lost the round! #Press any key to continue");
+							players.get(i).setPersonalMoney(players.get(i).getPersonalMoney() - bets.get(i));
+						} else {
+							sendMessageLocal(i, "You won the round! #Press any key to continue");
+							players.get(i).setPersonalMoney(players.get(i).getPersonalMoney() + bets.get(i));
+						}
+						readers.get(i).readLine();
 					}
-					else {
-						sendMessageLocal(i,"You won the round! #Press any key to continue");
-						players.get(i).setPersonalMoney(players.get(i).getPersonalMoney() + bets.get(i));
-					}
-					readers.get(i).readLine();
 				}
 			}catch (IOException e){
 				System.out.println("Something went wrong!");
 				System.exit(2);
 			}
 			playingDeck.clearDeck();
-			for(int i=0;i<noPlayers;i++){
-				players.get(i).getPersonalDeck().clearDeck();
-				bets.set(i,0);
+			for (int i = 0; i < noPlayers; i++){
+				if(sockets.get(i).isConnected()) {
+					players.get(i).getPersonalDeck().clearDeck();
+					bets.set(i, 0.0);
+				}
 			}
 		}
 	}
