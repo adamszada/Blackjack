@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public interface InputHandler {
-	public Scanner sc = new Scanner(System.in);
+	Scanner sc = new Scanner(System.in);
 
 	static double getBet(double limit){
 		double bet = 0;

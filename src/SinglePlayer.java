@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class SinglePlayer implements OutputHandler, InputHandler {
 
 	public static final int BLACKJACK_VALUE = 21;
@@ -7,7 +5,6 @@ public class SinglePlayer implements OutputHandler, InputHandler {
 	private final Person player;
 	private final Person dealer;
 	private boolean endFlag;
-
 
 	SinglePlayer(){
 		this.playingDeck = new Deck();
@@ -47,7 +44,6 @@ public class SinglePlayer implements OutputHandler, InputHandler {
 	}
 
 	public void runRound(){
-		Scanner sc = new Scanner(System.in);
 		int choice;
 		double bet;
 		while(player.getPersonalMoney()>0){
@@ -63,23 +59,22 @@ public class SinglePlayer implements OutputHandler, InputHandler {
 			else
 				endFlag = false;
 			if(!endFlag){
-				System.out.print("Ur hand: ");
-				System.out.println(player.getPersonalDeck());
-				System.out.println("Dealer's deck: "+dealer.getPersonalDeck().getCard(0)+ " [Hidden]");
-				System.out.println("Ur deck is valued at: "+player.getPersonalDeck().getCardsValue());
-				System.out.println(OutputHandler.getMessage(OutputHandler.Type.CHOICE));
+				System.out.println("Your hand:" +player.getPersonalDeck());
+				System.out.println("Dealer's deck: "+dealer.getPersonalDeck().getCard(0)+ " and" + " [Hidden]");
+				System.out.println(OutputHandler.getMessage(Type.DECK_VALUE) + player.getPersonalDeck().getCardsValue());
+				System.out.println(OutputHandler.getMessage(OutputHandler.Type.MOVE_CHOICE));
 				choice = InputHandler.getChoice(1,2);
 				switch(choice){
 					case 1:
 						do {
 							drawCard(player,1);
-							System.out.println("U draw: " + player.getPersonalDeck().getCard(player.getPersonalDeck().getSize() - 1));
+							System.out.println(OutputHandler.getMessage(Type.DRAW_CARD)+ player.getPersonalDeck().getCard(player.getPersonalDeck().getSize() - 1));
 							if (player.getPersonalDeck().getCardsValue() > BLACKJACK_VALUE) {
 								endFlag = true;
 								break;
 							}
-							System.out.println("Ur deck is valued at: " + player.getPersonalDeck().getCardsValue());
-							System.out.println(OutputHandler.getMessage(Type.CHOICE));
+							System.out.println(OutputHandler.getMessage(Type.DECK_VALUE) + player.getPersonalDeck().getCardsValue());
+							System.out.println(OutputHandler.getMessage(Type.MOVE_CHOICE));
 							choice = InputHandler.getChoice(1,2);
 						}while(choice!=2);
 						break;
@@ -93,25 +88,18 @@ public class SinglePlayer implements OutputHandler, InputHandler {
 				endFlag = true;
 			}
 			bet = whoWin(bet);
-			if(bet==0) {
+			if(bet==0){
 				System.out.println("Push!");
-				player.addTied();
-			}
-			else {
-				if(bet>0){
-					System.out.println("U win");
-					player.addWon();
-				}
-				else{
-					System.out.println("U lose");
-					player.addLoses();
-				}
+			} else {
+				if(bet>0)
+					System.out.println("You win!");
+				else
+					System.out.println("You lose!");
 				player.setPersonalMoney(player.getPersonalMoney()+bet);
 			}
-			System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\nValue: "+dealer.getPersonalDeck().getCardsValue());
+			System.out.println("Dealer's deck: "+dealer.getPersonalDeck()+ "\n"+OutputHandler.getMessage(Type.DECK_VALUE)+dealer.getPersonalDeck().getCardsValue());
 			prepareRound();
 			System.out.println("END OF ROUND!");
 		}
-		System.out.println("Rounds: \nwon: "+player.getWon()+" lost: "+player.getLoses()+" tied: "+player.getTied());
 	}
 }

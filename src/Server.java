@@ -7,7 +7,6 @@ public class Server {
 
     private ServerSocket serverSocket;
 
-
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
@@ -34,7 +33,6 @@ public class Server {
             closeServerSocket();
         }
     }
-
 
     public void closeServerSocket() {
         try {
