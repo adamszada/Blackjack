@@ -35,7 +35,7 @@ public class SinglePlayer implements OutputHandler, InputHandler {
 	}
 
 	public double whoWin(double bet){
-		if(player.getPersonalDeck().getCardsValue()<BLACKJACK_VALUE && (dealer.getPersonalDeck().getCardsValue()>BLACKJACK_VALUE || dealer.getPersonalDeck().getCardsValue() < player.getPersonalDeck().getCardsValue()))
+		if(player.getPersonalDeck().getCardsValue()<=BLACKJACK_VALUE && (dealer.getPersonalDeck().getCardsValue()>BLACKJACK_VALUE || dealer.getPersonalDeck().getCardsValue() < player.getPersonalDeck().getCardsValue()))
 			return bet;
 		else if(dealer.getPersonalDeck().getCardsValue() == player.getPersonalDeck().getCardsValue())
 			return 0;
